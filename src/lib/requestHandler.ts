@@ -1,6 +1,7 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
-import { z, ZodObject, ZodRawShape } from 'zod';
-import { config } from '../config';
+import type { FastifyReply, FastifyRequest } from 'fastify';
+import { z, type ZodObject, type ZodRawShape } from 'zod';
+
+import { config } from '@/config';
 
 export const requestHandler = <
   Params extends ZodRawShape,

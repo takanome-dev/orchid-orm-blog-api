@@ -1,4 +1,4 @@
-import { testRequest } from '../../test/testRequest';
+import { testRequest } from '@/test/testRequest';
 
 describe('hello controller', () => {
   describe('GET /', () => {

@@ -4,10 +4,7 @@
     "es6": true
   },
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint",
-    "eslint-plugin-prettier"
-  ],
+  "plugins": ["@typescript-eslint", "eslint-plugin-prettier"],
   "extends": [
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended"
@@ -18,6 +15,7 @@
   },
   "rules": {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
+    "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-empty-function": "off",

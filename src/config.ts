@@ -2,7 +2,6 @@ import { z } from 'zod';
 import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env.local' });
-// dotenv.config({ path: '.env' });
 
 const env = z
   .object({
@@ -44,4 +43,6 @@ export const config = {
   ...env,
   logger,
   validateResponses: env.NODE_ENV !== 'production',
+  currentDBUrl:
+    env.NODE_ENV === 'test' ? env.DATABASE_URL_TEST : env.DATABASE_URL,
 };

@@ -1,5 +1,6 @@
-import { app } from '../app';
-import { InjectOptions } from 'fastify';
+import type { InjectOptions } from 'fastify';
+
+import { app } from '@/app';
 
 const request = app.inject.bind(app);
 

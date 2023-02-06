@@ -1,7 +1,8 @@
 import fastify from 'fastify';
-import { config } from './config';
-import { routes } from './routes';
 import { ZodError } from 'zod';
+
+import { config } from '@/config';
+import { routes } from '@/routes';
 
 export const app = fastify({ logger: config.logger });
 

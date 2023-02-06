@@ -1,5 +1,5 @@
-import { app } from './app';
-import { config } from './config';
+import { app } from '@/app';
+import { config } from '@/config';
 
 app.listen({ port: config.PORT }).catch((err) => {
   app.log.error(err);
