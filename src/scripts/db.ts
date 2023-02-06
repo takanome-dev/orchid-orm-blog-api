@@ -1,7 +1,7 @@
 import { rakeDb } from 'rake-db';
 import { appCodeUpdater } from 'orchid-orm';
 
-import { config } from '@/config';
+import { config } from '../config';
 
 const options = [{ databaseURL: config.currentDBUrl }];
 

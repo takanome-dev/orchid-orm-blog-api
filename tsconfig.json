@@ -18,6 +18,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
+    "allowJs": true,
     "baseUrl": "./src",
     "paths": {
       "@/*": ["*"]

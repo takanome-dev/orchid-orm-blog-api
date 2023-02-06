@@ -1,11 +1,13 @@
 import { z } from 'zod';
 import dotenv from 'dotenv';
 
+dotenv.config({ path: '.env' });
 dotenv.config({ path: '.env.local' });
 
 const env = z
   .object({
     PORT: z.number().default(3000),
+    JWT_SECRET: z.string(),
   })
   .and(
     z

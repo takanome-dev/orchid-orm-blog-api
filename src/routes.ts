@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 
-import { helloController } from '@/app/hello/hello.controller';
+import * as user from '@/app/user/user.controller';
 
 export const routes = async (app: FastifyInstance) => {
-  app.get('/', helloController);
+  app.post('/users', user.registerUserRoute);
 };
