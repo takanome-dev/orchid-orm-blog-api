@@ -1,11 +1,14 @@
 export class ApiError extends Error {
-  constructor(message: string, public statusCode = 422) {
+  statusCode: number;
+
+  constructor(statusCode = 500, message: string) {
     super(message);
+    this.statusCode = statusCode;
   }
 }
 
 export class UnauthorizedError extends ApiError {
   constructor() {
-    super('Unauthorized', 401);
+    super(401, 'Unauthorized');
   }
 }

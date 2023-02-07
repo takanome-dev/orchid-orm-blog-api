@@ -12,7 +12,11 @@ app.setErrorHandler(function (error, request, reply) {
   // Log error
   this.log.error(error);
 
-  if (error instanceof ZodError) {
+  if (error.statusCode) {
+    reply.status(error.statusCode).send({
+      error: error.message,
+    });
+  } else if (error instanceof ZodError) {
     reply.status(422).send({
       error: 'Validation failed',
       issues: error.issues,

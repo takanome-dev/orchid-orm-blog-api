@@ -54,7 +54,7 @@ describe('user controller', () => {
 
       // expect error because a user with such username was created before the request
       expect(res.json()).toMatchObject({
-        message: 'Username is already taken',
+        error: 'Username is already taken',
       });
     });
 
@@ -66,7 +66,7 @@ describe('user controller', () => {
       const res = await testRequest.post('/users', data);
 
       expect(res.json()).toMatchObject({
-        message: 'Email is already taken',
+        error: 'Email is already taken',
       });
     });
   });

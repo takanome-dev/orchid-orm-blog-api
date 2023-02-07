@@ -17,25 +17,29 @@ export const registerUserRoute = routeHandler(
   },
   async (req) => {
     try {
+      const hash = await encryptPassword(req.body.password);
+
       const user = await db.user.select('id', 'email', 'username').create({
         ...req.body,
-        password: await encryptPassword(req.body.password),
+        password: hash,
       });
+
+      const token = createToken({ id: user.id });
 
       return {
         user,
-        token: createToken({ id: user.id }),
+        token,
       };
     } catch (err) {
-      console.log({ err });
-      if (err instanceof db.user.error && err.isUnique) {
-        if (err.columns.username) {
-          throw new ApiError('Username is already taken');
+      if (err instanceof db.user.error) {
+        if (err.constraint?.includes('user_username')) {
+          throw new ApiError(400, 'Username is already taken');
         }
-        if (err.columns.email) {
-          throw new ApiError('Email is already taken');
+        if (err.constraint?.includes('user_email')) {
+          throw new ApiError(400, 'Email is already taken');
         }
       }
+
       throw err;
     }
   }
