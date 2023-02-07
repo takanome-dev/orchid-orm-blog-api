@@ -8,6 +8,7 @@ import {
   type ZodTypeAny,
 } from 'zod';
 
+// TODO: Add tests
 export const deepStrict = <T extends ZodTypeAny>(
   schema: T
 ): T extends AnyZodObject ? ZodObject<T['shape'], 'strict'> : T => {
