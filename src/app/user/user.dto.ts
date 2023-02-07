@@ -9,3 +9,5 @@ export const authDto = z.object({
   }),
   token: z.string(),
 });
+
+export type AuthDto = z.infer<typeof authDto>;
