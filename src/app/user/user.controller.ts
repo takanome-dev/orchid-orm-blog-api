@@ -1,11 +1,11 @@
-import { routeHandler } from '@/lib/routeHandler';
+import { routeHandler } from '@/lib/helpers/route-handler';
 import { db } from '@/db';
-import { encryptPassword, comparePassword } from '@/lib/password';
-import { createToken } from '@/lib/jwt';
+import { encryptPassword, comparePassword } from '@/lib/helpers/bcrypt';
+import { createToken } from '@/lib/helpers/jwt';
 import { userSchema } from './user.table';
 import { authDto } from './user.dto';
 import { ApiError } from '@/lib/errors';
-import { omit } from '@/lib/utils';
+import { omit } from '@/lib/utils/omit';
 
 export const registerUser = routeHandler(
   {
@@ -16,7 +16,7 @@ export const registerUser = routeHandler(
     }),
     result: authDto,
   },
-  async (req) => {
+  async (req, reply) => {
     try {
       const hash = await encryptPassword(req.body.password);
 
@@ -27,10 +27,12 @@ export const registerUser = routeHandler(
 
       const token = createToken({ id: user.id });
 
-      return {
-        user,
-        token,
-      };
+      return reply
+        .send({
+          user,
+          token,
+        })
+        .code(201);
     } catch (err) {
       if (err instanceof db.user.error) {
         if (err.constraint?.includes('user_username')) {
@@ -54,7 +56,7 @@ export const loginUser = routeHandler(
     }),
     result: authDto,
   },
-  async (req) => {
+  async (req, reply) => {
     const user = await db.user
       .select('id', 'email', 'username', 'password')
       .findByOptional({
@@ -65,9 +67,11 @@ export const loginUser = routeHandler(
       throw new ApiError(400, 'Email or password is invalid');
     }
 
-    return {
-      user: omit(user, 'password'),
-      token: createToken({ id: user.id }),
-    };
+    return reply
+      .send({
+        user: omit(user, 'password'),
+        token: createToken({ id: user.id }),
+      })
+      .code(200);
   }
 );

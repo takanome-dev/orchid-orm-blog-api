@@ -1,9 +1,8 @@
-import type { AuthDto } from './user.dto';
-import { testRequest } from '@/test/testRequest';
-import { userFactory } from '@/test/testFactories';
+import { testRequest } from '@/lib/test/test-request';
+import { userFactory } from '@/lib/test/test-factories';
 import { db } from '@/db';
-import { verifyToken } from '@/lib/jwt';
-import { comparePassword, encryptPassword } from '@/lib/password';
+import { verifyToken } from '@/lib/helpers/jwt';
+import { comparePassword, encryptPassword } from '@/lib/helpers/bcrypt';
 
 describe('user controller', () => {
   describe('REGISTER - POST /users', () => {
@@ -102,6 +101,7 @@ describe('user controller', () => {
         password: 'password',
       });
 
+      // expect(res.json().status).toBe(400);
       expect(res.json()).toMatchObject({
         error: 'Email or password is invalid',
       });
@@ -115,6 +115,7 @@ describe('user controller', () => {
         password: 'invalid password',
       });
 
+      // expect(res.json().status).toBe(400);
       expect(res.json()).toMatchObject({
         error: 'Email or password is invalid',
       });
