@@ -53,6 +53,6 @@ export const routeHandler = <
       return result.parse(await fn(req as Request, reply));
     }
 
-    return fn(req as Request, reply);
+    return await fn(req as Request, reply);
   };
 };

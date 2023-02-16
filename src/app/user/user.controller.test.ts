@@ -101,7 +101,7 @@ describe('user controller', () => {
         password: 'password',
       });
 
-      // expect(res.json().status).toBe(400);
+      expect(res.statusCode).toBe(400);
       expect(res.json()).toMatchObject({
         error: 'Email or password is invalid',
       });
@@ -115,7 +115,7 @@ describe('user controller', () => {
         password: 'invalid password',
       });
 
-      // expect(res.json().status).toBe(400);
+      expect(res.statusCode).toBe(400);
       expect(res.json()).toMatchObject({
         error: 'Email or password is invalid',
       });
