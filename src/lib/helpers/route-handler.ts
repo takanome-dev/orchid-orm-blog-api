@@ -7,8 +7,8 @@ import {
   type ZodRawShape,
   type ZodTypeAny,
 } from 'zod';
-import { config } from '../config';
-import { deepStrict } from './zodUtils';
+import { config } from '@/config';
+import { deepStrict } from '@/lib/utils/zod-utils';
 
 export const routeHandler = <
   Params extends AnyZodObject,
@@ -32,8 +32,8 @@ export const routeHandler = <
     body?: Body;
     result?: Result;
   },
-  fn: (req: Request, res: FastifyReply) => Promise<Response> | Response
-): ((req: FastifyRequest, res: FastifyReply) => Promise<Response>) => {
+  fn: (req: Request, reply: FastifyReply) => Promise<Response> | Response
+): ((req: FastifyRequest, reply: FastifyReply) => Promise<Response>) => {
   const params = schema.params;
   const query = schema.query;
   const body = schema.body;
@@ -44,18 +44,15 @@ export const routeHandler = <
       schema.result instanceof ZodType ? schema.result : z.object(schema.result)
     );
 
-  return async (req, res) => {
+  return async (req, reply) => {
     if (params) req.params = params.parse(req.params);
     if (query) req.query = query.parse(req.query);
     if (body) req.body = body.parse(req.body);
 
-    const response = await fn(req as Request, res);
-
     if (result) {
-      return result.parse(response);
+      return result.parse(await fn(req as Request, reply));
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return response as any;
+    return fn(req as Request, reply);
   };
 };
