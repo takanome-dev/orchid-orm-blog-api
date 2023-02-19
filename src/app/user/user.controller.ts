@@ -6,6 +6,7 @@ import { userSchema } from './user.table';
 import { authDto } from './user.dto';
 import { ApiError } from '@/lib/errors';
 import { omit } from '@/lib/utils/omit';
+import { getCurrentUserId } from '@/lib/helpers/get-user-id';
 
 export const registerUser = routeHandler(
   {
@@ -27,12 +28,10 @@ export const registerUser = routeHandler(
 
       const token = createToken({ id: user.id });
 
-      return reply
-        .send({
-          user,
-          token,
-        })
-        .code(201);
+      return reply.send({
+        user,
+        token,
+      });
     } catch (err) {
       if (err instanceof db.user.error) {
         if (err.constraint?.includes('user_username')) {
@@ -67,11 +66,32 @@ export const loginUser = routeHandler(
       throw new ApiError(400, 'Email or password is invalid');
     }
 
-    return reply
-      .send({
-        user: omit(user, 'password'),
-        token: createToken({ id: user.id }),
+    return reply.send({
+      user: omit(user, 'password'),
+      token: createToken({ id: user.id }),
+    });
+  }
+);
+
+export const followUserRoute = routeHandler(
+  {
+    params: userSchema.pick({
+      username: true,
+    }),
+  },
+  async (req, reply) => {
+    const userId = getCurrentUserId(req);
+
+    await db.user
+      .findBy({
+        username: req.params.username,
       })
-      .code(200);
+      .follows.create({
+        follower_id: userId,
+      });
+
+    return reply.send({
+      message: `You are now following ${req.params.username}`,
+    });
   }
 );

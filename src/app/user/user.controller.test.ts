@@ -4,8 +4,8 @@ import { db } from '@/db';
 import { verifyToken } from '@/lib/helpers/jwt';
 import { comparePassword, encryptPassword } from '@/lib/helpers/bcrypt';
 
-describe('user controller', () => {
-  describe('REGISTER - POST /users', () => {
+describe('USER CONTROLLER', () => {
+  describe('REGISTER - POST - /users', () => {
     // pick params to use for this request
     const params = userFactory.pick({
       username: true,
@@ -71,7 +71,7 @@ describe('user controller', () => {
     });
   });
 
-  describe('POST /users/auth', () => {
+  describe('LOGIN - POST - /users/auth', () => {
     it('should authorize user, return user object and auth token', async () => {
       const password = 'password';
       const user = await userFactory.create({
@@ -121,4 +121,79 @@ describe('user controller', () => {
       });
     });
   });
+
+  // src/app/user/user.controller.test.ts
+
+  describe('FOLLOW - POST - /users/:username/follow', () => {
+    it('should follow a user', async () => {
+      // create a user to perform the request from
+      const currentUser = await userFactory.create();
+      // create a user to follow
+      const userToFollow = await userFactory.create();
+
+      // perform request as a provided user
+      await testRequest
+        .as(currentUser)
+        .post(`/users/${userToFollow.username}/follow`);
+
+      // check that the userToFollow record exists in the database
+      // TODO: this is not working, need to fix
+      const follows = await db.user_follow.where({
+        following_id: userToFollow.id,
+      });
+
+      expect(follows).toEqual([
+        {
+          follower_id: currentUser.id,
+          following_id: userToFollow.id,
+        },
+      ]);
+    });
+
+    // it('should return not found error when no user found by username', async () => {
+    //   const currentUser = await userFactory.create();
+
+    //   const res = await testRequest
+    //     .as(currentUser)
+    //     .post(`/users/lalala/follow`);
+
+    //   expect(res.json()).toEqual({
+    //     message: 'Record is not found',
+    //   });
+    // });
+  });
+
+  // describe('DELETE /users/:username/follow', () => {
+  //   it('should unfollow a user', async () => {
+  //     const currentUser = await userFactory.create();
+  //     const userToFollow = await userFactory.create({
+  //       follows: { create: [{ follower_id: currentUser.id }] },
+  //     });
+
+  //     await testRequest
+  //       .as(currentUser)
+  //       .delete(`/users/${userToFollow.username}/follow`);
+
+  //     const follows = await db.user_follow.where({
+  //       following_id: userToFollow.id,
+  //     });
+  //     expect(follows).toEqual([]);
+  //   });
+
+  //   it('should return not found error when no user found by username', async () => {
+  //     const currentUser = await userFactory.create();
+
+  //     const res = await testRequest
+  //       .as(currentUser)
+  //       .post(`/users/lalala/follow`);
+
+  //     // check that such userFollow record doesn't exist
+  //     const exists = await db.user_follow
+  //       .where({
+  //         following_id: userToFollow.id,
+  //       })
+  //       .exists();
+  //     expect(exists).toEqual(false);
+  //   });
+  // });
 });

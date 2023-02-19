@@ -2,6 +2,7 @@ import { orchidORM } from 'orchid-orm';
 
 import { config } from '@/config';
 import { UserTable } from '@/app/user/user.table';
+import { UserFollowTable } from '@/app/user/user-follow.table';
 
 export const db = orchidORM(
   {
@@ -10,6 +11,6 @@ export const db = orchidORM(
   },
   {
     user: UserTable,
-    // tables will be listed here
+    user_follow: UserFollowTable,
   }
 );
